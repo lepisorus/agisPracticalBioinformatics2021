@@ -1,0 +1,342 @@
+---
+title: "1013R-basics-Markdown"
+output: html_document
+---
+
+# Assignment and Variable names
+```{r}
+a = log2(32)
+
+```
+
+# data type
+```{r cars}
+rm(list=ls())
+typeof(1+0i)
+a = c(1L,1.5)
+typeof(c(list(1)))
+typeof(list(c(1,2)))
+x <- list(1:3, "a", c(TRUE, FALSE, TRUE), c(2.3, 5.9))
+x
+c(list(1,2),list(3,4))
+list(list(1,2),list(3))
+
+x=c(1,2,3)
+class(x)
+class(factor(x))
+a=1:6
+dim(a)=c(3,2)
+a
+matrix( 1 : 6 , ncol=2, nrow=3)  
+
+x <- c(5.4, 6.2, 7.1, 4.8, 7.5)
+names(x) <- c('a', 'b', 'c', 'd', 'e')
+
+x[c(1,1,3)]
+which(names(x)=="b")
+x[x > 10]
+
+```
+
+# data structure
+```{r cars}
+df  <-	data.frame(  x = 1:3, 
+                     y = c ( " a " ,  " b " ,	" c " ) ,
+                     stringsAsFactors  = FALSE)
+df 
+typeof(df$x)
+# subsetting  the  first	row  df[1,] 
+# subsetting rows where df$x>1
+df[ df$x> 1 , ]
+
+```
+```
+
+
+```{r cars}
+
+
+### plot
+```{r}
+x <- seq(-pi,pi,0.1)
+
+plot(x, sin(x))
+plot(x,x)
+a = c(1,2,3)
+typeof(a)
+# numeric
+b = c(1L,2L,3L)
+typeof(b)
+c = c("A","b")
+typeof(c)
+d = c(a,c)
+typeof(d)
+c(FALSE,5,6,7)
+c("A",5)
+```
+
+### Compare the results of list() and c()
+```{r}
+x <- list(
+  list(1, 2), 
+  c(3, 4))
+x
+y <- c(list(1, 2), c(3, 4))
+y
+str(y)
+cat("------\n")
+y
+typeof(x)
+typeof(y)
+class(x)
+class(y)
+```
+
+### name
+```{r}
+a = c(1,2,3)
+a
+names(a) = paste0("n",1:2)
+
+a[1] = 10
+a
+
+f = factor(c("a","b","b"))
+f
+levels(f)
+
+f[1] = "c"
+
+f
+```
+
+### factors
+```{r}
+x <- factor(c("a", "b", "b", "a"))
+x
+x[2] <- "c"
+class(x)
+as.integer(x)
+b = as.character(x)
+b[2] <- "c"
+b
+class(b)
+
+```
+
+###　Matrices and Arrays
+```{r}
+# Two scalar arguments to specify rows and columns
+a <- matrix(1:6, ncol = 3, nrow = 2)
+a
+
+dim(a)
+
+# One vector argument to describe all dimensions
+b <- array(1:12, c(2, 3, 3))
+b
+?array
+# You can also modify an object in place by setting dim()
+c <- 1:6
+dim(c) <- c(3, 2)
+c
+
+rownames(a) <- c("A", "B")
+colnames(a) <- c("a", "b", "c")
+a
+```
+
+### Subsetting
+```{r}
+x <- c(5.4, 6.2, 7.1, 4.8, 7.5)
+names(x) <- c('a', 'b', 'c', 'd', 'e')
+x
+
+
+# We can ask for multiple elements at once:
+x[c(1, 3)]
+
+# Or slices of the vector:
+x[1:4]
+
+# If we ask for a number outside of the vector, R will return missing values
+x[6]
+
+# If we ask for the 0th element, we get an empty vector:
+x[0]
+
+```
+**In many programming languages (C and python, for example), the first element of a vector has an index of 0. In R, the first element is 1.**
+
+### Skipping and removing elements
+```{r}
+x[-2]
+x[c(-1, -5)]  # or x[-c(1,5)]
+
+#x[-1:3] #This gives a somewhat cryptic error:
+x[-(1:3)]
+```
+
+### Subsetting by name
+```{r}
+x
+x[c("a", "c")]
+
+# how about un-unique names?
+names(x)[2] = "a"
+x
+x[c("a", "c")]
+
+
+x[which(names(x) == "a")]
+```
+
+### Subsetting through other logical operations
+```{r}
+x
+x[c(TRUE, TRUE, FALSE, FALSE)]
+```
+#### matrix 
+```{r}
+a = matrix(1:12,ncol=3)
+a[,2]
+b = matrix(1:12,ncol=4)
+b
+dim(a)
+dim(b)
+a %*% b
+
+
+
+```
+
+
+### data frame
+```{r}
+cats <- data.frame(coat = c("calico", "black", "tabby"), weight = c(2.1, 5.0, 3.2), likes_string = c(1, 0, 1),stringsAsFactors = FALSE)
+
+str(cats)
+cats
+typeof(cats)
+class(cats)
+is.data.frame(cats)
+cats
+cats$coat
+cats[1,]
+```
+
+### data I/O
+```{r}
+getwd()
+
+df = read.table("../data/1014_dat.txt")
+head(df,2)
+
+class(df)
+dim(df)
+
+df
+
+head(df,2)
+df$c1  # pulling out columns by specifying them using the $ operator
+df[1,]  #  subset the first row  
+df$c1 > 1 # subsetting rows where df$x>1
+df2 = df[df$c1 > 1,]
+df2
+
+df2$index = seq(1,7)
+df2
+# Adding columns and rows
+nl = seq(1,5)
+df3 = rbind(nl,df2)
+df3
+
+
+rownames(df3)[1] = "new"
+df3
+
+saveRDS(df3,"../results/res.rds")
+
+write.table(df3,"../results/res.txt",sep="\t",quote = F)
+?write.table
+```
+
+### write your own function
+```{r}
+a = c(NA,1,2,3,4,5)
+mean(a)
+
+meanRemoveNA <- function(x){ 
+  mean(x, na.rm=TRUE) 
+  }
+
+
+mean(a)
+meanRemoveNA(a)
+```
+
+### apply family
+```{r}
+cats
+
+l = lapply(cats[,-1],meanRemoveNA)
+s = sapply(cats[,-1],meanRemoveNA)
+l
+s
+typeof(l)
+typeof(s)
+
+li <- list("klaus","martin","georg")  
+lapply(li, toupper)
+
+
+fct <- function(x) { return(c(x, x^2, x^3)) }
+s2 = lapply(1:5, fct)
+s2
+class(s2)
+
+do.call(rbind,s2)
+
+
+x <- matrix(1:12, nrow=4, ncol=3)
+x
+apply(x, 1, sum)
+apply(x, 2, mean)
+paste("a","b")
+
+
+```
+
+### R packages
+```{r}
+.libPaths()
+install.packages("data.table")
+
+
+library(data.table)
+
+
+f = fread("../data/Dataset_S1.txt",data.table=F)
+
+dim(f)
+
+head(f,2)
+
+colnames(f)[4] = "total_Bases"
+hist(f$total_Bases)
+
+install.packages("ggplot2")
+
+# Or the development version from GitHub:
+install.packages("devtools")
+devtools::install_github("tidyverse/ggplot2")
+```
+
+
+```{r}
+f = read.csv("../data/tss_test.txt",sep="\t",header=F,stringsAsFactors=F)
+f
+```
+
+
+
